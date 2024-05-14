@@ -29,10 +29,6 @@ public class RetrieveTaskByIdServiceTest {
 
 	@Test
 	public void shouldBeAbleToListTheTaskById() {
-		/*
-			TODO: Para que esse teste passe, sua aplicação deve permitir que seja
-			 			retornado uma tarefa com o mesmo id informado.
-		*/
 		 TaskDTO taskDTO = Utils.newTaskDTO();
 		 Task newTask = createTaskService.execute(taskDTO);
 

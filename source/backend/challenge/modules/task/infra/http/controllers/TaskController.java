@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @Singleton
 @Path("tasks")
 public class TaskController {
@@ -47,10 +49,9 @@ public class TaskController {
 	@GET
 	@Path("single/{taskId}")
 	public Response index(@PathParam("taskId") Long taskId) {
-		// TODO: A rota deve retornar somente a tarefa a qual o id corresponder
 		try {
 			final Task task = retrieveTaskByIdService.execute(taskId);
-			if (task == null) {
+			if (isNull(task)) {
 				return DefaultResponse.notFound();
 			}
 			return DefaultResponse.ok().entity(task);
@@ -72,10 +73,6 @@ public class TaskController {
 	@PUT
 	@Path("single/{taskId}")
 	public Response update(@PathParam("taskId") Long taskId, Task task) {
-		/*
-			TODO:  A rota deve alterar apenas o title e description da tarefa
-			 			 que possua o id igual ao id correspondente nos parâmetros da rota.
-		 */
 		try {
 			task.setId(taskId);
 			updateTaskService.execute(task);
@@ -89,7 +86,6 @@ public class TaskController {
 	@DELETE
 	@Path("single/{taskId}")
 	public Response delete(@PathParam("taskId") Long taskId) {
-		// TODO: A rota deve deletar a tarefa com o id correspondente nos parâmetros da rota
 		try {
 			deleteTaskService.execute(taskId);
 			return DefaultResponse.noContent();

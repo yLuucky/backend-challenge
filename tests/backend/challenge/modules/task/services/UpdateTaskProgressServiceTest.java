@@ -76,10 +76,6 @@ public class UpdateTaskProgressServiceTest {
 
 	@Test
 	public void shouldNotBeAbleToUpdateTaskProgressWhenProgressLessThanOneHundred() {
-		/*
-			TODO:  Para que esse teste passe, sua aplicação deve permitir que sejam
-		         alterado apenas o campo `status`, quando o progresso for igual a 100.
-		*/
 		final int expectedProgress = 85;
 
 		final TaskDTO task = Utils.newTaskDTO();
@@ -100,10 +96,6 @@ public class UpdateTaskProgressServiceTest {
 
 	@Test(expected = InvalidProgressException.class)
 	public void shouldNotBeAbleToUpdateTaskProgressWhenProgressGreaterThanOneHundred() {
-		/*
-			TODO:  Para que esse teste passe, sua aplicação deve permitir que sejam
-		         alterado apenas o campo `status`, quando o progresso for igual a 100.
-		*/
 		final int expectedProgress = 102;
 
 		final TaskDTO task = Utils.newTaskDTO();

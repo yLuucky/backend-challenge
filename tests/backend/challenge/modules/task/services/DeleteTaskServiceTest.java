@@ -29,7 +29,6 @@ public class DeleteTaskServiceTest {
 
 	@Test
 	public void shouldBeAbleToDeleteTaskById() {
-		// TODO: Para que esse teste passe, sua aplicação deve permitir que tarefas sejam deletadas por id.
 		final TaskDTO taskDTO = Utils.newTaskDTO();
 		final Task newTask = createTaskService.execute(taskDTO);
 

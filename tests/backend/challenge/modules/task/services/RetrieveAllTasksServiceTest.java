@@ -30,10 +30,6 @@ public class RetrieveAllTasksServiceTest {
 
 	@Test
 	public void shouldBeAbleToListTheTasks() {
-		/*
-			TODO: Para que esse teste passe, sua aplicação deve permitir que seja
-					  retornado um array com todas as tarefas que foram criadas até o momento.
-		*/
 		 TaskDTO taskDTO = Utils.newTaskDTO();
 		 createTaskService.execute(taskDTO);
 		 List<Task> tasks = retrieveAllTasksService.execute();
