@@ -4,43 +4,47 @@ import backend.challenge.modules.task.dtos.TaskDTO;
 import backend.challenge.modules.task.models.Task;
 
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
 public class TaskRepository implements ITaskRepository {
 
+	private final static List<Task> tasks = new ArrayList<>();
+
 	@Override
 	public Task index(final Long taskId) {
-		// TODO: Criar método responsável por retornar tarefa por id
-
-		return null;
+		return tasks.stream().filter(task -> task.getId().equals(taskId)).findFirst().orElse(null);
 	}
 
 	@Override
 	public List<Task> show() {
-		// TODO: Criar método responsável por retornar todas as tarefas
-
-		return null;
+		return tasks;
 	}
 
 	@Override
 	public Task create(final TaskDTO taskDTO) {
-		// TODO: Criar método responsável por criar uma tarefa
+		final Task task = Task.fromDto(taskDTO);
+		tasks.add(task);
 
-		return null;
+		return task;
 	}
 
 	@Override
 	public Task update(final Task task) {
-		// TODO: Criar método responsável por atualizar uma tarefa
+		final Task taskToUpdate = this.index(task.getId());
+		taskToUpdate.setTitle(task.getTitle());
+		taskToUpdate.setDescription(task.getDescription());
+		taskToUpdate.setProgress(task.getProgress());
+		taskToUpdate.setStatus(task.getStatus());
 
-		return null;
+		return taskToUpdate;
 	}
 
 	@Override
 	public void delete(final Long taskId) {
- 		// TODO: Criar método responsável por deletar tarefa por id
-
+		final Task taskToDelete = this.index(taskId);
+		tasks.remove(taskToDelete);
 	}
 
 }
