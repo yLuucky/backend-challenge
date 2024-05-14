@@ -1,8 +1,8 @@
 package backend.challenge.modules.task.infra.http.controllers;
 
+import backend.challenge.modules.task.dtos.TaskProgressDTO;
 import backend.challenge.modules.task.infra.http.views.TaskProgressView;
-import backend.challenge.modules.task.models.Task;
-import backend.challenge.modules.task.services.*;
+import backend.challenge.modules.task.services.IUpdateTaskProgressService;
 import kikaha.urouting.api.*;
 
 import javax.inject.Inject;
@@ -21,15 +21,10 @@ public class TaskProgressController {
 
 	@PUT
 	@Path("single/{taskId}")
-	public Response updateProgress(@PathParam("taskId") Long taskId, TaskProgressView taskProgressView) {
-		/*
-			TODO: A rota deve alterar apenas o progresso da tarefa que possua o id igual ao id correspondente
-			 			nos parâmetros da rota.
-			 			O `progress` pode ter o valor máximo de 100, e quando ele atingi o máximo,
-			 			o `status` deve ser alterado para `COMPLETE`
-		 */
+	public Response updateProgress(@PathParam("taskId") final Long taskId, final TaskProgressView taskProgressView) {
+		final TaskProgressDTO taskProgressDTO = TaskProgressDTO.fromView(taskProgressView, taskId);
 
-		return DefaultResponse.ok().entity("Hello world");
+		updateTaskProgressService.execute(taskProgressDTO);
+		return DefaultResponse.ok();
 	}
-
 }

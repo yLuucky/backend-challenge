@@ -1,5 +1,6 @@
 package backend.challenge.modules.task.infra.http.controllers;
 
+import backend.challenge.modules.task.dtos.TaskDTO;
 import backend.challenge.modules.task.infra.http.views.TaskView;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.services.*;
@@ -7,6 +8,7 @@ import kikaha.urouting.api.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Singleton
 @Path("tasks")
@@ -14,43 +16,57 @@ public class TaskController {
 
 	private final ICreateTaskService createTaskService;
 	private final IDeleteTaskService deleteTaskService;
+	private final IUpdateTaskService updateTaskService;
 	private final IRetrieveAllTasksService retrieveAllTasksService;
 	private final IRetrieveTaskByIdService retrieveTaskByIdService;
-	private final IUpdateTaskService updateTaskService;
 
 	@Inject
-	public TaskController(
-		final ICreateTaskService createTaskService,
-		final IDeleteTaskService deleteTaskService,
-		final IRetrieveAllTasksService retrieveAllTasksService
-	) {
-		this.createTaskService = createTaskService;
-		this.deleteTaskService = deleteTaskService;
-		this.retrieveAllTasksService = retrieveAllTasksService;
-		this.retrieveTaskByIdService = null;
-		this.updateTaskService = null;
-	}
+	public TaskController(final ICreateTaskService createTaskService,
+						  final IDeleteTaskService deleteTaskService,
+						  final IUpdateTaskService updateTaskService,
+						  final IRetrieveAllTasksService retrieveAllTasksService,
+						  final IRetrieveTaskByIdService retrieveTaskByIdService
+						  ){
+        this.createTaskService = createTaskService;
+        this.deleteTaskService = deleteTaskService;
+		this.updateTaskService = updateTaskService;
+        this.retrieveAllTasksService = retrieveAllTasksService;
+        this.retrieveTaskByIdService = retrieveTaskByIdService;
+    }
 
 	@GET
 	public Response show() {
-		// TODO: Rota que lista todas as tarefas
-
-		return DefaultResponse.ok().entity("Hello world");
+		try {
+			final List<Task> allTasks = retrieveAllTasksService.execute();
+			return DefaultResponse.ok().entity(allTasks);
+		} catch (Exception e) {
+			return DefaultResponse.badRequest().entity(e.getMessage());
+		}
 	}
 
 	@GET
 	@Path("single/{taskId}")
 	public Response index(@PathParam("taskId") Long taskId) {
 		// TODO: A rota deve retornar somente a tarefa a qual o id corresponder
-
-		return DefaultResponse.ok().entity("Hello world");
+		try {
+			final Task task = retrieveTaskByIdService.execute(taskId);
+			if (task == null) {
+				return DefaultResponse.notFound();
+			}
+			return DefaultResponse.ok().entity(task);
+		} catch (Exception e) {
+			return DefaultResponse.badRequest().entity(e.getMessage());
+		}
 	}
 
 	@POST
 	public Response create(TaskView task) {
-		// TODO: A rota deve receber title e description, sendo o `title` o título da tarefa e `description` uma descrição da tarefa.
-
-		return DefaultResponse.ok().entity("Hello world");
+		try {
+			Task newTask = createTaskService.execute(TaskDTO.fromView(task));
+			return DefaultResponse.created().entity(newTask);
+		} catch (Exception e) {
+			return DefaultResponse.badRequest().entity(e.getMessage());
+		}
 	}
 
 	@PUT
@@ -60,16 +76,26 @@ public class TaskController {
 			TODO:  A rota deve alterar apenas o title e description da tarefa
 			 			 que possua o id igual ao id correspondente nos parâmetros da rota.
 		 */
+		try {
+			task.setId(taskId);
+			updateTaskService.execute(task);
 
-		return DefaultResponse.ok().entity("Hello world");
+			return DefaultResponse.ok().entity(task);
+		} catch (Exception e) {
+			return DefaultResponse.badRequest().entity(e.getMessage());
+		}
 	}
 
 	@DELETE
 	@Path("single/{taskId}")
 	public Response delete(@PathParam("taskId") Long taskId) {
 		// TODO: A rota deve deletar a tarefa com o id correspondente nos parâmetros da rota
-
-		return DefaultResponse.ok().entity("Hello world");
+		try {
+			deleteTaskService.execute(taskId);
+			return DefaultResponse.noContent();
+		} catch (Exception e) {
+			return DefaultResponse.badRequest().entity(e.getMessage());
+		}
 	}
 
 }
